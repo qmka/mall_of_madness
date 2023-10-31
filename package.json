@@ -1,0 +1,22 @@
+{
+  "name": "quazatron-adventure",
+  "version": "1.0.0",
+  "description": "Simply vanilla JS-based text adventure engine for browser",
+  "main": "app.js",
+  "scripts": {},
+  "keywords": [
+    "adventure",
+    "interactive",
+    "fiction",
+    "text",
+    "adventure"
+  ],
+  "author": "Michael Solovyev",
+  "license": "CC-BY-NC-4.0",
+  "devDependencies": {
+    "eslint": "^5.16.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.16.0",
+    "eslint-plugin-jquery": "^1.5.0"
+  }
+}
