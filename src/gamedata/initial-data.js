@@ -6,8 +6,19 @@ const defaultLocation = 1;
 // Первое число - id предмета, второе число - id его локации.
 const initialItemPlaces = {
   0: -1,
-  1: 0,
-  2: 1,
+  1: 8,
+  2: 10,
+  3: -1,
+  4: 20,
+  5: -1,
+  6: -1,
+  7: -1,
+  8: -1,
+  9: -1,
+  10: 15,
+  11: -1,
+  12: 30,
+  13: -1,
 };
 
 // Игровые флаги, принимают значения true или false
@@ -15,13 +26,29 @@ const initialItemPlaces = {
 const initialFlags = {
   isVictory: false,
   isGameOver: false,
-  /*
-  isTrollKilled: false,
-  */
+  isGluttonKilled: false,
+  isSecurityKilled: false,
+  isGiantKilled: false,
+  isMonsterKilled: false,
+  isAppleNotOnTree: false,
+  isBoomerangGiven: false,
+  isScrollGiven: false,
+  isDoorOpen: false,
+  isAppleEaten: false,
+  isMentosEaten: false,
+  isPepsiDrinken: false,
+  isFlashlightOn: false,
+  isBucketFull: false,
+  isRedbullDrinken: false,
+  isKeyInFontain: false,
+  isFantaExists: false,
+  isPepsiExists: false,
+  isRedbullExists: false
 };
 
 // Игровые счётчики, принимают числовые значения
 const initialCounters = {
+  keyTurns: 0
   /*
   gameTurns: 0
   */
