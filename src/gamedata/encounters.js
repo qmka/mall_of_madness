@@ -160,9 +160,56 @@ const encounters = {
         };
         return answer;
     }
-    /*
-    Добавьте свой код, если нужно
-    */
+
+    if (objectIds.includes(1) && Inventory.includes(1)) {
+      Inventory.removeItem(1);
+      ItemPlaces.set(1, 8);
+      return "Хрупкая бутылка моментально разбивается на миллионы осколков, а молоко разлетается вокруг. С одной стороны, жаль, потому что я только что уничтожил ценный квестовый предмет. С другой, я смогу вернуться в Молочную Бездну и найти ещё одну бутылку."
+    }
+    const currentLocation = CurrentLocation.get();
+    if (objectIds.includes(3) && Inventory.includes(3) && Flags.get("isBucketFull")) {
+      Flags.toggle("isBucketFull");
+      if (currentLocation === 19 && !Flags.get("isGiantKilled")) {
+        Flags.toggle("isGiantKilled");
+        Inventory.removeItem(3);
+        return "Вы выливаете ведро горячей воды на замороженного великана. Казалось бы, всего чуть-чуть воды по сравнению с его громадиной, но... Его левая нога начинает таять, великан подкашивается, а потом с оглушительным шумом падает, разбиваясь на множество осколков. Путь свободен!"
+      }
+      return "Вода выливается из ведра."
+    }
+
+    if (currentLocation === 19 && objectIds.includes(18) && !Flags.get("isGiantKilled")) {
+      return "Великан остаётся безразличным к вашим действиям."
+    }
+
+    if (currentLocation === 16 && objectIds.includes(15) && !Flags.get("isGluttonKilled") && objectIds.includes(2) && Inventory.includes(2)) {
+      Inventory.removeItem(2);
+      ItemPlaces.set(3, 16);
+      Flags.toggle("isGluttonKilled");
+      return "Обжора неожиданно шустро ловит банан, закидывает его в глотку. Начинается шипение, его морда краснеет и... Раздаётся громкий взрыв. Когда пыль оседает, о существовании обжоры напоминает лишь валяющееся на полу ведро. GO VEGAN!"
+    }
+
+    if (currentLocation === 21 && objectIds.includes(26) && !Flags.get("isSecurityKilled")) {
+      if (objectIds.includes(12) && Inventory.includes(12)) {
+        Inventory.removeItem(12);
+        Flags.toggle("isSecurityKilled");
+        return "Вы бросаете дуриан, охранник принюхивается своим чувствительным носом и... Комнату прорезает истошный вопль! Охранник хватается за лицо и выбегает из помещения в неизвестном направлении."
+      }
+      return "Это не подействует на охранника."
+    }
+
+    if (Inventory.includes(8) && objectIds.includes(8)) {
+      // если у игрока есть бумеранг
+      // то им можно сбить яблоко
+      if (currentLocation === 10) {
+        if (objectIds.includes(9) && !Flags.get("isAppleNotOnTree")) {
+          Inventory.removeItem(8);
+          ItemPlaces.set(9, 10);
+          Flags.toggle("isAppleNotOnTree")
+          return "Вы бросаете бумеранг в яблоко и попадаете! Бумеранг запутывается в ветвях, но, к счастью, свою задачу он выполнил: яблоко падает вниз."
+        }
+      }
+      return "Вы бросаете бумеранг, и он возвращается к вам в руки. Больше ничего не происходит"
+    }
 
     return defaultTexts.playerUselessAction;
   },
@@ -197,14 +244,14 @@ const encounters = {
       return "Это огромный ледяной великан, состоящий из нескольких намертво слипшихся глыб мороженого. Истинное порождение ледяной бездны морозильников безумного супермаркета."
     }
 
-    if (currentLocation == 17 && objectId === 23) {
+    if (currentLocation === 17 && objectId === 23) {
       if (Flags.get("isAppleEaten")) {
-        return 'Кажется, достаточно преисполнился в своём познании, что могу прочитать эту надпись. На стене углём корявым почерком выведено: "Скажи КНИ".'
+        return 'Кажется, я достаточно преисполнился в своём познании, что могу прочитать эту надпись. На стене углём корявым почерком выведено: "Скажи КНИ".'
       }
       return "На стене углём выведены какие-то непонятные для меня каракули. Я не настолько специалист по лингвистике, чтобы в них разобрать что-то осмысленное."
     }
 
-    if (currentLocation == 23 && objectId === 24) {
+    if (currentLocation === 23 && objectId === 24) {
       let desc = 'Это массивная металлическая дверь. На ней прикреплена табличка: "Подземелье скидок". В данный момент дверь '
       if (Flags.get("isDoorOpen")) {
         desc += "открыта."
@@ -247,7 +294,31 @@ const encounters = {
     if (currentLocation === 21 && objectIds.includes(26) && !Flags.get("isSecurityKilled")) {
       return '"КЫШ!!! ИДИ ОТСЮДА!!!" - кричит охранник, брызжа слюной.'
     }
-    return 'Здесь не с кем говорить.';
+
+    if (currentLocation === 23 && objectIds.includes(29)) {
+      if (!Flags.get("isDoorOpen")) {
+        Flags.toggle("isDoorOpen");
+        return "Вы произносите волшебное слово, и дверь медленно открывается..."
+      }
+      return "Второй раз не сработает - дверь уже открыта."
+    }
+
+    if (currentLocation === 35) {
+      if (objectIds.includes(21)) {
+        if (!Flags.get("isBoomerangGiven")) {
+          return 'Мальчик говорит вам: "Принеси нам чего-нибудь попить, а мы тебя обязательно отблагодарим. Сестрёнке что-нибудь для самых маленьких, а я люблю напитки с апельсиновым вкусом.'
+        }
+        return '"Спасибо, было очень вкусно" - говорит вам мальчик.'
+      }
+      if (objectIds.includes(22)) {
+        if (!Flags.get("isScrollGiven")) {
+          return "Маленькая девочка смущённо опускает глаза и тыкает пальцем в брата. Типа, говори вот с ним."
+        }
+        return "Маленькая девочка показывает большой палец. Типа, ВО какое было молоко!";
+      }
+    }
+
+    return 'Слова тают в воздухе, но ничего не происходит.';
   },
 
   buy(objectIds) {
@@ -270,11 +341,15 @@ const encounters = {
     }
 
     if (currentLocation === 28 && objectIds.includes(25) && !Flags.get("isMonsterKilled")) {
-      return 'Монстр бормочет грустно: "ВОТ ТАК ВСЕГДА... :(".'
+      return 'Монстр отбрасывает вас ударом своей волосатой руки и бормочет грустно: "ВОТ ТАК ВСЕГДА... :(".'
     }
 
     if (currentLocation === 21 && objectIds.includes(26) && !Flags.get("isSecurityKilled")) {
-      return '"ТЫ У МЕНЯ ДОЖДЁШЬСЯ" - хмурится охранник, пресекая ваши попытки.'
+      return '"ТЫ У МЕНЯ ДОЖДЁШЬСЯ" - хмурится охранник, пресекая ваши попытки. Вам нужно или оружие, или что-то другое, чтобы выкурить его отсюда.'
+    }
+
+    if (currentLocation === 35 && (objectIds.includes(21) || objectIds.includes(22))) {
+      return "Причинение вреда несовершеннолетним преследуется по закону. УК РФ глава 6 статьи 105, 111, 112, 115, 116 - выбирайте любую на вкус."
     }
     return 'Ничего не произошло.';
   },
@@ -306,7 +381,22 @@ const encounters = {
   },
 
   destroy(objectIds) {
-    return 'Вы не можете это сломать.';
+    if (objectIds.includes(1) && Inventory.includes(1)) {
+      Inventory.removeItem(1);
+      ItemPlaces.set(1, 8);
+      return "Я со всей силы разбиваю бутылку, молоко и осколки разлетаются во все стороны. С одной стороны, жаль, потому что я только что уничтожил ценный квестовый предмет. С другой, я смогу вернуться в Молочную Бездну и найти ещё одну бутылку."
+    }
+    const currentLocation = CurrentLocation.get();
+    if (objectIds.includes(16) && currentLocation === 3) {
+      return "Если вы хотите голыми руками ломать трубы и скручивать их в узел, то вам в игру The Hulk."
+    }
+    if (objectIds.includes(18) && currentLocation === 19 && !Flags.get("isGiantKilled")) {
+      return "Чтобы сломать такую глыбину мне потребуется как минимум экскаватор."
+    }
+    if (objectIds.includes(24) && currentLocation === 23) {
+      return "Я не настолько силён, чтобы ломать толстые металлические двери."
+    }
+    return 'Сломать можно всё, что угодно, если постараться. Но попробуйте сделать что-то другое.';
   },
 
   cross(objectIds) {
@@ -358,6 +448,9 @@ const encounters = {
     }
     if (objectIds.includes(12) && Inventory.includes(12)) {
       return 'Когда вы попадёте в игру по мотивам шоу "Звёзды в Африке" или "Последний Герой", вам, определённо придётся есть дурианы, бычьи яйца, мадагаскарских тараканов и прочую дрянь. Но в рамках этой игры вас тошнит от одного запаха этого фрукта, куда уж там его есть...'
+    }
+    if (objectIds.includes(20) && CurrentLocation.get() === 34) {
+      return "А попа не слипнется???"
     }
     return 'Вы не можете это съесть.';
   },
@@ -543,7 +636,8 @@ const encounters = {
       if (objectIds.includes(5) && Inventory.includes(5)) {
         Inventory.removeItem(5);
         Inventory.addItem(8);
-        return '"Спасибо, дружище!" - мальчик с горящими глазами хватает фанту. - "Чем бы тебя отблагодарить? Дай подумать...". Откуда-то из-за спины он достаёт игрушечный бумеранг. "Оружием это назвать сложно, но авось в хозяйстве пригодится.", - подмигивает он.'
+        Flags.toggle("isBoomerangGiven");
+        return '"Спасибо, дружище!" - мальчик с горящими глазами хватает фанту. - "Чем бы тебя отблагодарить? Дай подумать... Вот, самое важное, запомни три буквы: "ПОР". Потом, словно о чём-то вспомнив, откуда-то из-за спины он достаёт игрушечный бумеранг. "Оружием это назвать сложно, но авось в хозяйстве пригодится.", - подмигивает парень.'
       }
       return "Мальчик покачивает головой."
     }
@@ -552,15 +646,57 @@ const encounters = {
       if (objectIds.includes(1) && Inventory.includes(1)) {
         Inventory.removeItem(1);
         Inventory.addItem(13);
+        Flags.toggle("isScrollGiven");
         return '"Ух, молочко, любимое!!!" - пищит девчонка и выхватывает у вас бутылку. Потом, будто бы что-то вспомнив, шарит за пазухой и потягивает вам в знак благодарности свиток.'
       }
       return "Девочка будто бы не замечает вас."
     }
     // 3. Дать обжоре
+    if (currentLocation === 16 && objectIds.includes(15) && !Flags.get("isGluttonKilled")) {
+      if (objectIds.includes(2) && Inventory.includes(2)) {
+        Inventory.removeItem(2);
+        ItemPlaces.set(3, 16);
+        Flags.toggle("isGluttonKilled");
+        return "Обжора хватает банан, закидывает его в глотку. Начинается шипение, его морда краснеет и... Раздаётся громкий взрыв. Когда пыль оседает, о существовании обжоры напоминает лишь валяющееся на полу ведро. GO VEGAN!"
+      }
+      return "Обжора с пренебрежением отстраняет вашу руку."
+    }
     // 4. Дать великану
+    if (currentLocation === 19 && objectIds.includes(18) && !Flags.get("isGiantKilled")) {
+      return "Великан остаётся безразличным к вашим действиям."
+    }
     // 5. Дать монстру
+    if (currentLocation === 28 && objectIds.includes(25) && !Flags.get("isMonsterKilled")) {
+      let answer = ""
+      // если есть ментос - даём
+      if (objectIds.includes(10) && Inventory.includes(10)) {
+        Inventory.removeItem(10);
+        Flags.toggle("isMentosEaten");
+        answer += "Вы даёте монстру ментос, и тот моментально его проглатывает. Впрочем, с виду веселее он не становится. "
+      }
+      if (objectIds.includes(6) && Inventory.includes(6)) {
+        Inventory.removeItem(6);
+        Flags.toggle("isPepsiDrinken");
+        Flags.toggle("isPepsiExists");
+        answer += "Вы протягиваете монстру пепси, которую он хватает и заливает в свою глотку. Кажется, на секунду на его лице появилась улыбка. "
+      }
+      if (Flags.get("isMentosEaten") && Flags.get("isPepsiDrinken")) {
+        answer += "Через некоторое время монстр замирает, потом хватается за живот и... происходит то, что обычно происходит при смешивании ментоса и колы (или пепси) - большой БАДАБУМ! Когда вы приходите в себя после взрыва, о монстре напоминает только валяющийся на полу фонарик."
+        ItemPlaces.set(11, 28);
+        Flags.toggle("isMonsterKilled");
+      }
+      if (answer === "") answer = "Монстр нехотя отмахивается."
+      return answer
+    }
     // 6. Дать охраннику
-
+    if (currentLocation === 21 && objectIds.includes(26) && !Flags.get("isSecurityKilled")) {
+      if (objectIds.includes(12) && Inventory.includes(12)) {
+        Inventory.removeItem(12);
+        Flags.toggle("isSecurityKilled");
+        return "Охранник с недоверием берёт в руки дуриан, принюхивается своим чувствительным носом и... Комнату прорезает истошный вопль! Охранник хватается за лицо и выбегает из помещения в неизвестном направлении."
+      }
+      return "Охранник с недоверием смотрит на вас, сложив руки на груди."
+    }
     return 'Не получится.';
   },
 
@@ -569,6 +705,9 @@ const encounters = {
   },
 
   sniff(objectIds) {
+    if (objectIds.includes(12) && Inventory.includes(12)) {
+      return "Дуриан отличается характерным запахом тухлой рыбы, чеснока, яиц или лука, канализации, вонючих носков и сероводорода."
+    }
     return 'Вы принюхиваетесь, но не улавливаете никаких необычных запахов.';
   },
 
@@ -599,7 +738,7 @@ const encounters = {
   },
 
   sleep(objectIds) {
-    return 'Не время спать, пока зло не дремлет!';
+    return 'Не время спать, пока я в этом жутком месте!';
   },
 
   wakeUp(objectIds) {
@@ -611,10 +750,36 @@ const encounters = {
   },
 
   read(objectIds) {
+    if (objectIds.includes(13) && Inventory.includes(13)) {
+      return 'На свитке написано: "КРИ _ _ _    _ _ _  _ _ _"'
+    }
+    if (CurrentLocation.get() === 17 && objectIds.includes(23)) {
+      if (Flags.get("isAppleEaten")) {
+        return 'Кажется, я достаточно преисполнился в своём познании, что могу прочитать эту надпись. На стене углём корявым почерком выведено: "Скажи КНИ".'
+      }
+      return "На стене углём выведены какие-то непонятные для меня каракули. Я не настолько специалист по лингвистике, чтобы в них разобрать что-то осмысленное."
+    }
     return 'Здесь нечего читать.';
   },
 
   fill(objectIds) {
+    const currentLocation = CurrentLocation.get();
+    if ((objectIds.includes(3) || objectIds.includes(16) || objectIds.includes(17)) && currentLocation === 3 && Inventory.includes(3)) {
+      if (!Flags.get("isBucketFull")) {
+        Flags.toggle("isBucketFull")
+        return "Я налил в ведро горячей воды."
+      }
+      return "Ведро уже полное"
+    }
+    if ((objectIds.includes(16) || objectIds.includes(17)) && currentLocation === 3) {
+      return "Мне нужна ёмкость, куда я смогу налить воду."
+    }
+    if (objectIds.includes(1) && Inventory.includes(1) && currentLocation === 3) {
+      return "Чтобы налить в бутылку воды нужно сначала вылить молоко. Но в этой странной бутылке я просто не вижу никакого входного отверстия, кажется, она из цельного куска стекла."
+    }
+    if ((objectIds.includes(1) || objectIds.includes(3)) && currentLocation === 8 && Inventory.includes(3)) {
+      return "Ведро молока - вещь, наверное, в хозяйстве полезная. Но в этом месте нет как такового жидкого молока в достаточном количестве, чтобы наполнить целое ведро. Разве что по каплям со стен собирать - да кому это надо? "
+    }
     return defaultTexts.playerUselessAction;
   },
 
@@ -632,6 +797,65 @@ const encounters = {
 
   score(objectIds) {
     return 'В этой игре не встроена возможность подсчёта очков.';
+  },
+
+  pour(objectIds) {
+    if (objectIds.includes(1) && Inventory.includes(1)) {
+      return "Очень хотелось бы вылить молоко, но в бутылке не видно никакого входного отверстия. Она будто бы сделана из единого куска стекла."
+    }
+    if (objectIds.includes(3) && Inventory.includes(3) && Flags.get("isBucketFull")) {
+      if (CurrentLocation.get() === 19 && !Flags.get("isGiantKilled")) {
+        Flags.toggle("isGiantKilled");
+        Inventory.removeItem(3);
+        return "Вы выливаете ведро горячей воды на замороженного великана. Казалось бы, всего чуть-чуть воды по сравнению с его громадиной, но... Его левая нога начинает таять, великан подкашивается, а потом с оглушительным шумом падает, разбиваясь на множество осколков. Путь свободен!"
+      }
+      Flags.toggle("isBucketFull");
+      return "Вода выливается из ведра."
+    }
+    return "Не совсем понимаю, что вы хотите сделать."
+  },
+
+  yell(objectIds) {
+    const currentLocation = CurrentLocation.get()
+    if (objectIds.includes(28)) { 
+      if (Inventory.includes(13)) { 
+        if (currentLocation === 0) {
+          Flags.toggle("isVictory");
+          return "Вы кричите слова заклинания, после чего прямо под вами появляется портал, в который вы проваливаетесь. Несколько долгих секунд путешествия в подпространстве, и вы вываливаетесь из портала на парковку рядом с супермаркетом. Вы выбрались из этого странного места и выиграли игру!";
+        }
+        return "Вы кричите слова заклинания, но ничего не происходит. Видимо, это нужно делать в определённом месте."
+      }
+      return "Вы кричите слова заклинания, но они остаются просто словами, если у вас с собой нет волшебного свитка."
+    }
+
+    if (currentLocation === 23 && objectIds.includes(29)) {
+      if (!Flags.get("isDoorOpen")) {
+        Flags.toggle("isDoorOpen");
+        return "Вы кричите волшебное слово, и дверь медленно открывается..."
+      }
+      return "Второй раз не сработает - дверь уже открыта."
+    }
+
+    return "Я делаю это, но ничего не происходит..."
+  },
+
+  insert(objectIds) {
+    if (objectIds.includes(4)) {
+      if (Inventory.includes(4)) {
+        const currentLocation = CurrentLocation.get();
+        if (objectIds.includes(24) && currentLocation === 23) {
+          return "К сожалению, ваш ключик не подходит к этой двери. Вообще, судя по его размерам и форме, он не от двери."
+        }
+        if (objectIds.includes(19) && currentLocation === 13) {
+          Inventory.removeItem(4);
+          Flags.toggle("isKeyInFontain");
+          return "Я вставил ключик в замочную скважину фонтанчика."
+        }
+        return "Не совсем понимаю, что вы хотите сделать с ключом."
+      }
+      return "У меня нет ключа."
+    }
+    return "Это бесполезно."
   },
 };
 

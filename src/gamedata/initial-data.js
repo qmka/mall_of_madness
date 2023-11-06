@@ -49,9 +49,6 @@ const initialFlags = {
 // Игровые счётчики, принимают числовые значения
 const initialCounters = {
   keyTurns: 0
-  /*
-  gameTurns: 0
-  */
 };
 
 // Инвентарь игрока в начале игры.
