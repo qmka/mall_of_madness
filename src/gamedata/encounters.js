@@ -60,12 +60,6 @@ const encounters = {
 
   // Проверяем, мешает ли игроку что-либо двигаться в выбранном им направлении
   checkPlayerObstacles(direction) {
-    /*
-    const currentLocation = CurrentLocation.get();
-    if (currentLocation === 7 && !Flags.get("isTrollKilled") && direction === 'e') {
-        return "Тролль рычит и не даёт мне пройти.";
-    }
-    */
     const currentLocation = CurrentLocation.get();
     if (currentLocation === 21 && !Flags.get("isSecurityKilled") && direction === 'e') {
       return "Охранник сидит прямо у восточной двери и не даёт мне пройти."
@@ -76,8 +70,8 @@ const encounters = {
     if (currentLocation === 23 && !Flags.get("isDoorOpen") && direction === 's') {
       return "Дверь закрыта, я не могу пройти."
     }
-    if (currentLocation === 29 && !Flags.get("isFlashlightOn") && direction === 's') {
-      return "Здесь слишком темно, чтобы двигаться дальше."
+    if ((currentLocation === 29 && !Flags.get("isFlashlightOn") && direction === 's') || (currentLocation === 30 && !Flags.get("isFlashlightOn") && direction === 'n')) {
+      return "Там слишком темно, чтобы туда пройти без света."
     }
 
     return '';
@@ -312,7 +306,7 @@ const encounters = {
       }
       if (objectIds.includes(22)) {
         if (!Flags.get("isScrollGiven")) {
-          return "Маленькая девочка смущённо опускает глаза и тыкает пальцем в брата. Типа, говори вот с ним."
+          return "Маленькая девочка тыкает пальцем в брата. Типа, говори вот с ним."
         }
         return "Маленькая девочка показывает большой палец. Типа, ВО какое было молоко!";
       }
@@ -364,11 +358,15 @@ const encounters = {
         if (Inventory.includes(4)) {
           return "Дверь заперта. У вас есть ключик, но он не подходит к этой двери."
         } else {
-          return "Дверь заперта, её надо как-то открыть. Или что-то сделать, чтобы она открылась сама."
+          return "Дверь заперта, её надо как-то отпереть. Или что-то сделать, чтобы она открылась сама."
         }
       } else {
         return "Дверь уже открыта."
       }
+    }
+
+    if (objectIds.includes(1) && Inventory.includes(1)) {
+      return "Я осматриваю бутылку и не вижу никакого входного отверстия. Кажется, она из цельного куска стекла."
     }
     return 'Тут нечего открывать.';
   },
@@ -420,7 +418,7 @@ const encounters = {
       return ''
     }
     if (currentLocation === 13 && objectIds.includes(19)) {
-      return "Во-первых, сегодня не день ВДВ. Во-вторых, фонтанчик маловат, чтобы я в него или на него залез."
+      return "Я залезаю на автомат, но в моей жизни это абсолютно ничего не меняет. Приходится слезть."
     }
     return 'Вы не можете туда залезть.';
   },
@@ -550,9 +548,6 @@ const encounters = {
       }
       return "Рэдбулл ожидаемо придал мне сил, чувствую, что гору способен свернуть. Или залезть на неё!"
     }
-    if (objectIds.includes(19) && CurrentLocation.get() === 13) {
-      return "Тут нечего пить, фонтанчик давно пересох."
-    }
     if (objectIds.includes(17) && CurrentLocation.get() === 3) {
       return "Ай, горячая!"
     }
@@ -563,24 +558,24 @@ const encounters = {
     if (objectIds.includes(4) && CurrentLocation.get() === 13 && Flags.get("isKeyInFontain")) {
       Flags.toggle("isKeyInFontain");
       Inventory.addItem(4);
-      return "Я вытащил ключик из замочной скважины фонтанчика."
+      return "Я вытащил ключик из замочной скважины автомата."
     }
     return 'Здесь нет ничего такого, что я мог бы потянуть или вытащить, и это произвело бы хоть какой-то эффект.';
   },
 
   rotate(objectIds) {
-    // Ключик в фонтанчике можно крутить, только если он вставлен
+    // Ключик в автомате можно крутить, только если он вставлен
     if (objectIds.includes(4) && CurrentLocation.get() === 13 && Flags.get("isKeyInFontain")) {
       // Счётчик показывает, что дальше выкинет поворот ключа. 0 - исходное, 1 - фанта, 2 - пепси, 3 - редбулл, после 3 сброс на 0
       // При этом если один из напитков уже выдан и существует, то ничего не выпадает, но прокрутка засчитывается
       let counter = Counters.get("keyTurns");
-      let answer = "Вы повернули ключик в фонтанчике. "
+      let answer = "Вы повернули ключик в автомате. "
       counter += 1
       if (counter === 1) {
         if (!Flags.get("isFantaExists")) {
           Flags.toggle("isFantaExists");
           ItemPlaces.set(5, 13);
-          answer += "Раздался щелчок, и из большой дырки в фонтанчике что-то выпало на пол."
+          answer += "Раздался щелчок, и из большой дырки в автомате что-то выпало на пол."
         } else {
           answer += "Ничего не произошло."
         }
@@ -588,15 +583,7 @@ const encounters = {
         if (!Flags.get("isPepsiExists")) {
           Flags.toggle("isPepsiExists");
           ItemPlaces.set(6, 13);
-          answer += "Раздался щелчок, и из большой дырки в фонтанчике что-то выпало на пол."
-        } else {
-          answer += "Ничего не произошло."
-        }
-      } else if (counter === 2) {
-        if (!Flags.get("isPepsiExists")) {
-          Flags.toggle("isPepsiExists");
-          ItemPlaces.set(6, 13);
-          answer += "Раздался щелчок, и из большой дырки в фонтанчике что-то выпало на пол."
+          answer += "Раздался щелчок, и из большой дырки в автомате что-то выпало на пол."
         } else {
           answer += "Ничего не произошло."
         }
@@ -604,7 +591,7 @@ const encounters = {
         if (!Flags.get("isRedbullExists")) {
           Flags.toggle("isRedbullExists");
           ItemPlaces.set(7, 13);
-          answer += "Раздался щелчок, и из большой дырки в фонтанчике что-то выпало на пол."
+          answer += "Раздался щелчок, и из большой дырки в автомате что-то выпало на пол."
         } else {
           answer += "Ничего не произошло."
         }
@@ -649,7 +636,7 @@ const encounters = {
         Flags.toggle("isScrollGiven");
         return '"Ух, молочко, любимое!!!" - пищит девчонка и выхватывает у вас бутылку. Потом, будто бы что-то вспомнив, шарит за пазухой и потягивает вам в знак благодарности свиток.'
       }
-      return "Девочка будто бы не замечает вас."
+      return "Девочка продолжает смотреть на вас."
     }
     // 3. Дать обжоре
     if (currentLocation === 16 && objectIds.includes(15) && !Flags.get("isGluttonKilled")) {
@@ -724,6 +711,12 @@ const encounters = {
   },
 
   tear(objectIds) {
+    if (objectIds.includes(9) && CurrentLocation.get() === 10) {
+      if (!Flags.get("isAppleNotOnTree")) {
+        return "Я не могу дотянуться, оно слишком высоко."
+      }
+      return "Здесь нет больше яблок."
+    }
     return defaultTexts.playerUselessAction;
   },
 
@@ -755,9 +748,9 @@ const encounters = {
     }
     if (CurrentLocation.get() === 17 && objectIds.includes(23)) {
       if (Flags.get("isAppleEaten")) {
-        return 'Кажется, я достаточно преисполнился в своём познании, что могу прочитать эту надпись. На стене углём корявым почерком выведено: "Скажи КНИ".'
+        return 'Кажется, я достаточно преисполнился в своём познании, что могу прочитать эту надпись. На стене чем-то красным выведено: "Скажи КНИ".'
       }
-      return "На стене углём выведены какие-то непонятные для меня каракули. Я не настолько специалист по лингвистике, чтобы в них разобрать что-то осмысленное."
+      return "На стене чем-то красным выведены непонятные для меня каракули. Я не настолько специалист по лингвистике, чтобы в них разобрать что-то осмысленное."
     }
     return 'Здесь нечего читать.';
   },
@@ -849,7 +842,7 @@ const encounters = {
         if (objectIds.includes(19) && currentLocation === 13) {
           Inventory.removeItem(4);
           Flags.toggle("isKeyInFontain");
-          return "Я вставил ключик в замочную скважину фонтанчика."
+          return "Я вставил ключик в замочную скважину автомата."
         }
         return "Не совсем понимаю, что вы хотите сделать с ключом."
       }
