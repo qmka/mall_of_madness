@@ -1,21 +1,17 @@
-## Quazatron Adventure
+## Безумный Молл - Mall of Madness
 [![Build Status](https://travis-ci.org/eidolonzx/quazatron-adventure-boilerplate.svg?branch=master)](https://travis-ci.org/eidolonzx/quazatron-adventure-boilerplate)
 
-version 1.0.0
+version 0.9
 
-Simply vanilla JS-based text adventure engine.
+Simply vanilla JS-based text adventure.
 Russian language only.
 ES6-compatible browsers only
 
-Quazatron Adventure - простой движок на JavaScript, позволяющий создавать парсерные текстовые игры для браузера.
+В этом приключении вам нужно выбраться из очень странного гипермаркета, наполненного загадками и безумием. Исследуйте мир игры, отдавая компьютеру текстовые команды.
 
-Данный репозиторий является заготовкой, поверх которой можно программировать игровую логику.
-
-Демо-игра: [игра](https://eidolonzx.github.io/quazatron-adventure/), [репозиторий](https://github.com/eidolonzx/quazatron-adventure)
+[Игра на itch.io](https://qmka.itch.io/mall-of-madness)
 
 [Руководство игрока](./manual/players-guide.md)
-
-[Руководство разработчика](./manual/developer-guide.md)
 
 ---
 
