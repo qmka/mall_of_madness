@@ -5,7 +5,7 @@ const defaultTexts = {
 
   victoryText: 'Вы кричите слова заклинания, после чего прямо под вами появляется портал, в который вы проваливаетесь. Несколько долгих секунд путешествия в подпространстве, и вы вываливаетесь из портала на парковку рядом с супермаркетом. Вы выбрались из этого странного места и выиграли игру!',
 
-  defaultDescription: 'Ничего необычного.',
+  defaultDescription: 'Ничего необычного. Точнее, ничего такого, что имело бы значение.',
 
   defaultQuestion: 'Что будете делать?',
 
@@ -13,19 +13,19 @@ const defaultTexts = {
 
   parserDontUnderstandWord: 'Я не понимаю слово ',
 
-  defaultAnswerToTake: 'Ок, взял.',
+  defaultAnswerToTake: 'Ок, вы взяли это.',
 
-  playerDropsItem: 'Ок, положил.',
+  playerDropsItem: 'Ок, вы положили это.',
 
-  playerHasNoItem: 'У меня этого нет.',
+  playerHasNoItem: 'У вас этого нет.',
 
-  playerHasItems: 'У меня есть:',
+  playerHasItems: 'У вас есть:',
 
-  playerHasNoItems: 'У меня ничего нет.',
+  playerHasNoItems: 'У вас ничего нет.',
 
-  playerTakeItems: 'Я взял следующие предметы:',
+  playerTakeItems: 'Вы взяли следующие предметы:',
 
-  playerDropItems: 'Я положил следующие предметы:',
+  playerDropItems: 'Вы положили следующие предметы:',
 
   thereIsNoItems: 'Здесь ничего нет.',
 
