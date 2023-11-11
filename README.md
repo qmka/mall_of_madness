@@ -1,5 +1,4 @@
 ## Безумный Молл - Mall of Madness
-[![Build Status](https://travis-ci.org/eidolonzx/quazatron-adventure-boilerplate.svg?branch=master)](https://travis-ci.org/eidolonzx/quazatron-adventure-boilerplate)
 
 version 0.9
 
